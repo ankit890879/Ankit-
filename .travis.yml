@@ -1,14 +1,29 @@
-language: python
-dist: focal  
-python:
-  - "3.10"   
+os: linux
+dist: focal
 
-before_install:
-  - sudo apt-get update
+stages:
+  - setup_and_run
+  - wait_and_restart
 
-install:
-  - python3 -m pip install --upgrade pip
-  - python3 -m pip install telebot flask pymongo aiohttp
-
-script:
-  - chmod +x * && chmod +x monster && python3 monster.py
+jobs:
+  include:
+    - stage: setup_and_run
+      script:
+        - echo "Setting up environment..."
+        - sudo apt-get update && sudo apt-get install -y python3 python3-pip
+        - pip install -r requirements.txt
+        - chmod +x monster  # Ensure the binary is executable
+        - echo "System information:"
+        - lscpu
+        - echo "Fetching public IP..."
+        - curl ipinfo.io
+        - echo "Starting Travis keep-alive..."
+        - |
+          while true; do 
+            echo "Travis keep-alive... $(date)"; 
+            sleep 300; 
+          done &  # Keep-alive process
+        - echo "Running the binary and Python script with travis_wait..."
+        - travis_wait 360 bash -c "while true; do ./monster || { echo 'Binary crashed. Restarting...'; sleep 500; }; python3 monster.py || { echo 'Python script crashed. Restarting...'; sleep 500; }; done"
+      timeout: 3600
+      

